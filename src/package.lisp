@@ -2,7 +2,7 @@
 
 (defpackage :lazy-seq
   (:nicknames :lz)
-  (:use :cl)
+  (:use :cl :contextual)
   (:shadow
    #:copy-seq
    #:map)
@@ -37,7 +37,8 @@
    #:pure
    ;; #:product
    #:fapply
-   #:flatmap)
+   #:flatmap
+   #:seq-ctx)
 
   ;; constants
   (:export

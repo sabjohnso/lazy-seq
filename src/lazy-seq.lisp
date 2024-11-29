@@ -270,5 +270,12 @@ may be either a `SEQ' or a `CONS'"
         (seq-append (funcall fun (head seq))
                     (flatmap fun (tail seq))))))
 
-;; (defun pure (x)
-;;   (seq x))
+(defun pure (x)
+  (seq x))
+
+(define-constant seq-ctx
+    (make-instance 'monad-operators
+      :fmap    #'fmap
+      :pure    #'pure
+      :fapply  #'fapply
+      :flatmap #'flatmap))

@@ -7,6 +7,7 @@
 
 (defsystem :lazy-seq
   :description "Lazy sequences"
+  :depends-on (:contextual)
   :components
   ((:module "src"
     :serial t

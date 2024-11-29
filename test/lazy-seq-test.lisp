@@ -1,5 +1,5 @@
 (defpackage :lazy-seq-test
-  (:use :cl :5am :lazy-seq)
+  (:use :cl :5am :contextual :lazy-seq)
   (:shadowing-import-from :lazy-seq :map)
   (:export :run-all-tests!))
 
@@ -169,3 +169,28 @@
   (is (= 0 (ref cubes 0)))
   (is (= 1 (ref cubes 1)))
   (is (= 8 (ref cubes 2))))
+
+(test context
+  (is (equal
+       '(4 5 5 6)
+       (seq-to-list
+        (ctx-run seq-ctx
+          (flatten
+           (let-fun ((x (seq 1 2))
+                     (y (seq 3 4)))
+             (+ x y)))))))
+  (is (equal
+       '(4 5 5 6)
+       (seq-to-list
+        (ctx-run seq-ctx
+          (let-app ((x (seq 1 2))
+                    (y (seq 3 4)))
+            (+ x y))))))
+
+  (is (equal
+       '(4 5 5 6)
+       (seq-to-list
+        (ctx-run seq-ctx
+          (let-mon ((x (seq 1 2))
+                    (y (seq 3 4)))
+            (seq (+ x y))))))))

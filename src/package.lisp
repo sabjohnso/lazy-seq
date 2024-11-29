@@ -9,6 +9,7 @@
   (:export
    #:seq
    #:seq*
+   #:repeat
    #:iterate
    #:build-seq
    #:seq-p
@@ -19,6 +20,7 @@
    #:lazy
    #:seq-cons
    #:seq-append
+   #:interleave
    #:seq-length
    #:seq-reverse
    #:head
@@ -38,7 +40,7 @@
    ;; #:product
    #:fapply
    #:flatmap
-   #:seq-ctx)
+   #:make-seq-context)
 
   ;; constants
   (:export

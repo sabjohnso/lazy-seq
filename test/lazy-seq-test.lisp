@@ -1,6 +1,7 @@
 (defpackage :lazy-seq-test
   (:use :cl :5am :contextual :lazy-seq)
   (:shadowing-import-from :lazy-seq :map)
+  (:shadowing-import-from :contextual :fail)
   (:export :run-all-tests!))
 
 (in-package :lazy-seq-test)
@@ -60,6 +61,13 @@
     (is (seq-p seq1))
     (is (= 6 (seq-length seq1)))
     (is (equal '(1 2 3 4 5 6) (seq-to-list seq1)))))
+
+(test repeat
+  (let ((seq0 (repeat 1)))
+    (is (seq-p seq0))
+    (is (= 1 (ref seq0 0)))
+    (is (= 1 (ref seq0 1)))
+    (is (= 1 (ref seq0 2)))))
 
 (test seq-append
   (let ((counter 0))
@@ -168,29 +176,41 @@
 
   (is (= 0 (ref cubes 0)))
   (is (= 1 (ref cubes 1)))
-  (is (= 8 (ref cubes 2))))
+  (is (= 8 (ref cubes 2)))
+
+  (is (=  0 (ref alternating-integers 0)))
+  (is (=  1 (ref alternating-integers 1)))
+  (is (= -1 (ref alternating-integers 2)))
+  (is (=  2 (ref alternating-integers 3)))
+  (is (= -2 (ref alternating-integers 4))))
 
 (test context
-  (is (equal
-       '(4 5 5 6)
-       (seq-to-list
-        (ctx-run seq-ctx
-          (flatten
-           (let-fun ((x (seq 1 2))
+  (let ((context (make-seq-context)))
+    (is (equal
+         '(4 5 5 6)
+         (seq-to-list
+          (ctx-run context
+            (flatten
+             (let-fun ((x (seq 1 2))
+                       (y (seq 3 4)))
+               (+ x y)))))))
+   (is (equal
+        '(4 5 5 6)
+        (seq-to-list
+         (ctx-run context
+           (let-app ((x (seq 1 2))
                      (y (seq 3 4)))
-             (+ x y)))))))
-  (is (equal
-       '(4 5 5 6)
-       (seq-to-list
-        (ctx-run seq-ctx
-          (let-app ((x (seq 1 2))
-                    (y (seq 3 4)))
-            (+ x y))))))
+             (+ x y))))))
 
-  (is (equal
-       '(4 5 5 6)
-       (seq-to-list
-        (ctx-run seq-ctx
-          (let-mon ((x (seq 1 2))
-                    (y (seq 3 4)))
-            (seq (+ x y))))))))
+   (is (equal
+        '(4 5 5 6)
+        (seq-to-list
+         (ctx-run context
+           (let-mon ((x (seq 1 2))
+                     (y (seq 3 4)))
+             (seq (+ x y)))))))
+
+    (is (equal empty-seq (ctx-run context (fail "Yikes!!!"))))
+    (is (equal '(1 2 3 4) (seq-to-list (ctx-run context (mplus (seq 1 2) (seq 3 4))))))
+    (is (equal '(1 2) (seq-to-list (ctx-run context (mplus (seq 1 2) (mzero))))))
+    (is (equal '(3 4) (seq-to-list (ctx-run context (mplus (mzero) (seq 3 4))))))))

@@ -218,6 +218,13 @@ may be either a `SEQ' or a `CONS'"
                    (null (reverse accum)))))))
     (recur seq nil)))
 
+(defun interleave (seq0 seq1)
+  (lazy (if (empty-p seq0) empty-seq
+            (seq-cons (head seq0) (interleave seq1 (tail seq0))))))
+
+(defun repeat (value)
+  (seq-cons value (repeat value)))
+
 (defun seq-reverse (seq)
   (etypecase seq
     (seq (seq-seq-reverse seq))
@@ -273,9 +280,13 @@ may be either a `SEQ' or a `CONS'"
 (defun pure (x)
   (seq x))
 
-(define-constant seq-ctx
-    (make-instance 'monad-operators
+
+(defun make-seq-context ()
+    (make-instance 'monad-plus-operators
       :fmap    #'fmap
       :pure    #'pure
       :fapply  #'fapply
-      :flatmap #'flatmap))
+      :flatmap #'flatmap
+      :fail (lambda (str) (declare (ignore str)) empty-seq)
+      :mzero (lambda () empty-seq)
+      :mplus (lambda (mx my) (seq-append mx my))))

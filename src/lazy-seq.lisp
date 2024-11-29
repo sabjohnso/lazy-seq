@@ -222,8 +222,14 @@ may be either a `SEQ' or a `CONS'"
   (lazy (if (empty-p seq0) empty-seq
             (seq-cons (head seq0) (interleave seq1 (tail seq0))))))
 
-(defun repeat (value)
-  (seq-cons value (repeat value)))
+(defun repeat-aux (fragment)
+  (seq-append fragment (repeat-aux fragment)))
+
+(defmacro repeat (&rest items)
+  (if (null items) 'empty-seq
+      (let ((fragment (gensym "FRAGMENT")))
+        `(lazy (let ((,fragment (seq ,@items)))
+                 (repeat-aux ,fragment))))))
 
 (defun seq-reverse (seq)
   (etypecase seq

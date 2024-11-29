@@ -67,7 +67,18 @@
     (is (seq-p seq0))
     (is (= 1 (ref seq0 0)))
     (is (= 1 (ref seq0 1)))
-    (is (= 1 (ref seq0 2)))))
+    (is (= 1 (ref seq0 2))))
+
+  (let ((seq (repeat 'a 'b)))
+    (is (seq-p seq))
+    (is (eq 'a (ref seq 0)))
+    (is (eq 'b (ref seq 1)))
+    (is (eq 'a (ref seq 2)))
+    (is (eq 'b (ref seq 3))))
+
+  (let ((seq (repeat)))
+    (is (seq-p seq))
+    (is (empty-p seq))))
 
 (test seq-append
   (let ((counter 0))
@@ -159,14 +170,14 @@
 
 (test fmap
   (let* ((seq0 (seq 'a 'b 'c))
-         (seq1 (fmap #'symbol-name seq0)))
+         (seq1 (seq-fmap #'symbol-name seq0)))
     (is (seq-p seq1))
     (is (equal '("A" "B" "C") (seq-to-list seq1)))))
 
 (test fapply
   (let* ((fun-seq (seq #'symbol-name))
          (arg-seq (seq 'a 'b 'c))
-         (seq (fapply fun-seq arg-seq)))
+         (seq (seq-fapply fun-seq arg-seq)))
     (is (seq-p seq))
     (is (equal '("A" "B" "C") (seq-to-list seq)))))
 
@@ -174,7 +185,7 @@
 (test flatmap
   (flet ((fun (x) (seq x x)))
     (let* ((seq0 (seq 'a 'b))
-           (seq1 (flatmap #'fun seq0)))
+           (seq1 (seq-flatmap #'fun seq0)))
       (is (seq-p seq1))
       (is (equal '(a a b b)
                  (seq-to-list seq1))))))

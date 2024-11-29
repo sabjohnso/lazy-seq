@@ -290,39 +290,39 @@ may be either a `SEQ' or a `CONS'"
     (recur init seq)))
 
 
-(defun fmap (f seq)
+(defun seq-fmap (f seq)
   (etypecase seq
-    (seq (seq-fmap f seq))
+    (seq (seq-seq-fmap f seq))
     (cons (mapcar f seq))
     (null nil)))
 
-(defun seq-fmap (f seq)
+(defun seq-seq-fmap (f seq)
   (lazy (if (empty-p seq) empty-seq
             (seq-cons (funcall f (head seq))
                       (seq-fmap f (tail seq))))))
 
-(defun fapply (fun-seq arg-seq)
+(defun seq-fapply (fun-seq arg-seq)
   (lazy
     (if (empty-p fun-seq) empty-seq
-        (seq-append (fmap (head fun-seq) arg-seq)
-                    (fapply (tail fun-seq) arg-seq)))))
+        (seq-append (seq-fmap (head fun-seq) arg-seq)
+                    (seq-fapply (tail fun-seq) arg-seq)))))
 
-(defun flatmap (fun seq)
+(defun seq-flatmap (fun seq)
   (lazy
     (if (empty-p seq) empty-seq
         (seq-append (funcall fun (head seq))
-                    (flatmap fun (tail seq))))))
+                    (seq-flatmap fun (tail seq))))))
 
-(defun pure (x)
+(defun seq-pure (x)
   (seq x))
 
 
 (defun make-seq-context ()
-    (make-instance 'monad-plus-operators
-      :fmap    #'fmap
-      :pure    #'pure
-      :fapply  #'fapply
-      :flatmap #'flatmap
+    (make-instance 'contextual:monad-plus-operators
+      :fmap    #'seq-fmap
+      :pure    #'seq-pure
+      :fapply  #'seq-fapply
+      :flatmap #'seq-flatmap
       :fail (lambda (str) (declare (ignore str)) empty-seq)
       :mzero (lambda () empty-seq)
       :mplus (lambda (mx my) (seq-append mx my))))

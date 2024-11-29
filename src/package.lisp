@@ -2,7 +2,7 @@
 
 (defpackage :lazy-seq
   (:nicknames :lz)
-  (:use :cl :contextual)
+  (:use :cl)
   (:shadow
    #:copy-seq
    #:map)
@@ -31,10 +31,10 @@
    #:ormap
    #:andmap
    #:fold
-   #:fmap
-   #:pure
-   #:fapply
-   #:flatmap
+   #:seq-fmap
+   #:seq-pure
+   #:seq-fapply
+   #:seq-flatmap
    #:make-seq-context)
 
   ;; constants

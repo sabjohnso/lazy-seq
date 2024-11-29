@@ -135,6 +135,28 @@
     (is (= 2 (seq-length seq1)))
     (is (equal '(4 5) (seq-to-list seq1)))))
 
+(test map
+  (let* ((seq0 positive-integers)
+         (seq1 negative-integers)
+         (seq2 (map #'+ seq0 seq1)))
+    (is (= 0 (ref seq2 0)))
+    (is (= 0 (ref seq2 1)))))
+
+(test ormap
+  (let* ((seq (seq 1 2 3) ))
+    (is-false (ormap #'zerop seq)))
+
+  (let* ((seq (seq 0 1 2 3)))
+    (is-true (ormap #'zerop seq))))
+
+(test andmap
+  (flet ((positive-p (x) (> x 0)))
+    (let* ((seq (seq 1 2 3)))
+      (is-true (andmap #'positive-p seq)))
+    (let* ((seq (seq 0 1 2 3)))
+      (is-false (andmap #'positive-p seq)))))
+
+
 (test fmap
   (let* ((seq0 (seq 'a 'b 'c))
          (seq1 (fmap #'symbol-name seq0)))

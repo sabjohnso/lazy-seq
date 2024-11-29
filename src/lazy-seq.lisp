@@ -252,7 +252,37 @@ may be either a `SEQ' or a `CONS'"
     (if (seq-empty-p seq) empty-seq
         (if (<= n 0) empty-seq
             (seq-cons (head seq)
-                       (take (tail seq) (1- n)))))))
+                      (take (tail seq) (1- n)))))))
+
+(defun map (fun seq0 &rest seqs)
+  (labels ((recur (seqs)
+             (lazy (if (ormap #'empty-p seqs)
+                       empty-seq
+                       (seq-cons (apply fun (mapcar #'head seqs))
+                                 (recur (mapcar #'tail seqs)))))))
+    (recur (cons seq0 seqs))))
+
+(defun ormap (fun seq)
+  (labels ((recur (seq)
+             (cond ((empty-p seq) nil)
+                   ((funcall fun (head seq)) t)
+                   (t (recur (tail seq))))))
+    (recur seq)))
+
+(defun andmap (fun seq)
+  (labels ((recur (seq)
+             (cond ((empty-p seq) t)
+                   ((not (funcall fun (head seq))) nil)
+                   (t (recur (tail seq))))))
+    (recur seq)))
+
+(defun fold (fun init seq)
+  (labels ((recur (init seq)
+             (if (empty-p seq) init
+                 (recur (funcall fun init (head seq))
+                        (tail seq)))))
+    (recur init seq)))
+
 
 (defun fmap (f seq)
   (etypecase seq

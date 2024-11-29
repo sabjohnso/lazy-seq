@@ -27,17 +27,12 @@
    #:tail
    #:take
    #:drop
-   ;; #:map
-   ;; #:ormap
-   ;; #:andmap
-   ;; #:fold
-   ;; #:infix
-   ;; #:prefix
-   ;; #:suffix
-   ;; #:circumfix
+   #:map
+   #:ormap
+   #:andmap
+   #:fold
    #:fmap
    #:pure
-   ;; #:product
    #:fapply
    #:flatmap
    #:make-seq-context)
@@ -50,6 +45,4 @@
    #:negative-integers
    #:alternating-integers
    #:squares
-   #:cubes
-   ;; #:primes
-   ))
+   #:cubes))

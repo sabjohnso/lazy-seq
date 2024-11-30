@@ -5,6 +5,18 @@
     `(defconstant ,name (if (boundp ',name) (symbol-value ',name) ,value)
        ,@(when doc (list doc))))
 
+(defstruct none)
+(defstruct just value)
+(deftype optional ()
+  '(or just none))
+
+(defstruct lazy-value
+  "The role of `LAZY-VALUE' is to disambiguate a thunk produced
+as part of the lazy sequence functionality from a thunk that
+is actually an element of the lazy sequence"
+  thunk
+  (result (make-none) :type optional))
+
 (deftype seq-data ()
   `(or null cons lazy-value seq))
 
@@ -18,18 +30,10 @@
 (define-constant empty-seq (make-seq)
   "An empty `SEQ'")
 
-(defstruct none)
-(defstruct just value)
-(deftype optional ()
-  '(or just none))
 
 
-(defstruct lazy-value
-  "The role of `LAZY-VALUE' is to disambiguate a thunk produced
-as part of the lazy sequence functionality from a thunk that
-is actually an element of the lazy sequence"
-  thunk
-  (result (make-none) :type optional))
+
+
 
 (defmethod print-object ((obj seq) stream)
   (if *print-readably* (error "~s cannot be printed readably" (type-of obj))

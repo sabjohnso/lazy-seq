@@ -30,11 +30,6 @@ is actually an element of the lazy sequence"
 (define-constant empty-seq (make-seq)
   "An empty `SEQ'")
 
-
-
-
-
-
 (defmethod print-object ((obj seq) stream)
   (if *print-readably* (error "~s cannot be printed readably" (type-of obj))
       (format stream "#<~s>" (type-of obj))))

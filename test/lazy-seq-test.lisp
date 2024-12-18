@@ -147,8 +147,8 @@
     (is (equal '(4 5) (seq-to-list seq1)))))
 
 (test map
-  (let* ((seq0 positive-integers)
-         (seq1 negative-integers)
+  (let* ((seq0 (positive-integers))
+         (seq1 (negative-integers))
          (seq2 (map #'+ seq0 seq1)))
     (is (= 0 (ref seq2 0)))
     (is (= 0 (ref seq2 1)))))
@@ -191,31 +191,31 @@
                  (seq-to-list seq1))))))
 
 (test constants
-  (is (= 0 (ref nonnegative-integers 0)))
-  (is (= 1 (ref nonnegative-integers 1)))
+  (is (= 0 (ref (nonnegative-integers) 0)))
+  (is (= 1 (ref (nonnegative-integers) 1)))
 
-  (is (= 1 (ref positive-integers 0)))
-  (is (= 2 (ref positive-integers 1)))
+  (is (= 1 (ref (positive-integers) 0)))
+  (is (= 2 (ref (positive-integers) 1)))
 
-  (is (= 0 (ref nonpositive-integers 0)))
-  (is (= -1 (ref nonpositive-integers 1)))
+  (is (= 0 (ref (nonpositive-integers) 0)))
+  (is (= -1 (ref (nonpositive-integers) 1)))
 
-  (is (= -1 (ref negative-integers 0)))
-  (is (= -2 (ref negative-integers 1)))
+  (is (= -1 (ref (negative-integers) 0)))
+  (is (= -2 (ref (negative-integers) 1)))
 
-  (is (= 0 (ref squares 0)))
-  (is (= 1 (ref squares 1)))
-  (is (= 4 (ref squares 2)))
+  (is (= 0 (ref (squares) 0)))
+  (is (= 1 (ref (squares) 1)))
+  (is (= 4 (ref (squares) 2)))
 
-  (is (= 0 (ref cubes 0)))
-  (is (= 1 (ref cubes 1)))
-  (is (= 8 (ref cubes 2)))
+  (is (= 0 (ref (cubes) 0)))
+  (is (= 1 (ref (cubes) 1)))
+  (is (= 8 (ref (cubes) 2)))
 
-  (is (=  0 (ref alternating-integers 0)))
-  (is (=  1 (ref alternating-integers 1)))
-  (is (= -1 (ref alternating-integers 2)))
-  (is (=  2 (ref alternating-integers 3)))
-  (is (= -2 (ref alternating-integers 4))))
+  (is (=  0 (ref (alternating-integers) 0)))
+  (is (=  1 (ref (alternating-integers) 1)))
+  (is (= -1 (ref (alternating-integers) 2)))
+  (is (=  2 (ref (alternating-integers) 3)))
+  (is (= -2 (ref (alternating-integers) 4))))
 
 (test context
   (let ((context (make-seq-context)))
